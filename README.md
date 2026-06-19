@@ -53,4 +53,5 @@ can still hide a proof whose footprint silently changed. "Green ≠ faithful" is
 
 ## License
 
-MIT. Snippets are meant to be copied into your project freely.
+[Apache License 2.0](LICENSE), Copyright 2026 Trevor Morris — matching mathlib, Lean, and the rest of the
+ecosystem, so snippets copy into your mathlib project with zero license friction.
