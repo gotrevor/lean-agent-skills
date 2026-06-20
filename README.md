@@ -37,10 +37,10 @@ other version windows are very welcome — **issues and PRs open**.
 Find your symptom in [`v4.29.1-to-v4.31.0.md`](v4.29.1-to-v4.31.0.md). Each entry gives the error you see,
 what changed underneath, and a minimal fix. The patterns are grouped:
 
-- **Behavior changes (no warning)** — the high-value ones; A–K, M.
-- **Renames / signature changes that hard-error** — L, N, O (a deprecation alias was missing, `@[to_additive]`
-  didn't propagate, or an argument went implicit — so you get `unknown constant` / `Function expected`, not a
-  friendly warning).
+- **Behavior changes (no warning)** — the high-value ones; A–K, M, P.
+- **Renames / signature changes that hard-error** — L, N, O, Q, R (a deprecation alias was missing or only
+  *warned*, `@[to_additive]` didn't propagate, or an argument went implicit — so you get `unknown constant` /
+  `Function expected` / `Invalid field`, not a friendly warning).
 
 The single most useful debugging technique (drop a `trace_state` and read the goal v4.31 actually produced)
 is described at the top of that file.
