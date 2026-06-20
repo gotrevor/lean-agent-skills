@@ -45,6 +45,19 @@ what changed underneath, and a minimal fix. The patterns are grouped:
 The single most useful debugging technique (drop a `trace_state` and read the goal v4.31 actually produced)
 is described at the top of that file.
 
+## Where this fits in a bump
+
+A mathlib bump has two phases. The first is **mechanical and scriptable**: point
+`lean-toolchain` and the lakefile's mathlib rev at the new tag, refresh
+`lake-manifest.json`, fetch the prebuilt oleans (`lake exe cache get`), and `lake build`.
+That part is the same every time — automate it.
+
+The second phase is **this catalog**: the cascade of source breaks the new mathlib
+introduces, which no script can fix for you. So an automated bump that ends in a *red
+build* isn't a failure of the automation — it's the normal hand-off point, and that red
+build is exactly where the symptom → cause → fix entries below come in. Automate phase
+one; keep this open for phase two. (And a green build still owes you the check below.)
+
 ## A note on faithfulness
 
 A bump that compiles is not necessarily a bump that preserved your theorems. After porting, check your
