@@ -49,10 +49,13 @@ other version windows are very welcome — **issues and PRs open**.
 Find your symptom in [`v4.29.1-to-v4.31.0.md`](v4.29.1-to-v4.31.0.md). Each entry gives the error you see,
 what changed underneath, and a minimal fix. The patterns are grouped:
 
-- **Behavior changes (no warning)** — the high-value ones; A–K, M, P.
-- **Renames / signature changes that hard-error** — L, N, O, Q, R (a deprecation alias was missing or only
+- **Behavior changes (no warning)** — the high-value ones; A–K, M, P, S.
+- **Renames / signature changes that hard-error** — L, N, O, Q, R, T (a deprecation alias was missing or only
   *warned*, `@[to_additive]` didn't propagate, or an argument went implicit — so you get `unknown constant` /
   `Function expected` / `Invalid field`, not a friendly warning).
+- **Build-environment gotchas (not a source fix)** — U: a v4.31 *toolchain* change (the 3-file olean split)
+  that exhausts the host file-descriptor limit on a containerized/bind-mount full build. The source is fine;
+  the error is `Too many open files`, and the fix is to serialize the build, not edit any `.lean`.
 
 The single most useful debugging technique (drop a `trace_state` and read the goal v4.31 actually produced)
 is described at the top of that file.
