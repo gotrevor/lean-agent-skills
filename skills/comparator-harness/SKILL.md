@@ -221,7 +221,25 @@ Both fixes are the ones above: **the strong pattern** (real names, solution decl
 all three, because there is no delegation to typecheck; or **restate existentially** when the theorem
 is really an existence claim.
 
-**4. Challenge hygiene.**
+**4. ⚠️ The strong pattern breaks when equation-compiler definitions span several project modules.**
+Lean **dedups `match_N` auxiliary declarations within a module, but not across modules.** So if your
+project defines `u` in `Basic.lean`, `vv` in `Stoll.lean` and `gu` in `General.lean` — each getting its
+own matcher — but your *single-file* challenge declares all three together, then `vv` and `gu` silently
+**reuse `u.match_1`**. Their `ConstantInfo`s now differ from the project's, and comparator rejects the
+pair with a confusing mismatch on a constant you never wrote.
+
+It bites **only** the equation compiler (recursive / pattern-matching defs). Plain definitions, `Prop`s,
+set-builders and `sSup`/`limsup` bodies are immune — a challenge whose defs are all plain can span any
+number of project modules safely. Likewise, several recursive defs are fine if they all live in **one**
+project module.
+
+There is no clean fix. A multi-file challenge would restore the matchers but breaks the "challenge just
+imports mathlib, read *one* file" norm that makes the harness legible in the first place; the
+alternative is refactoring the project so the recursive definitions share a module. **The honest move
+is to leave that one result on the clone-and-bridge pattern and say why in a comment.** A considered
+exception beats a clever workaround nobody can review.
+
+**5. Challenge hygiene.**
 - ✋ **Never put a sorried or open statement in a challenge.** A challenge may contain only theorems
   the solution actually **proves**. If your project formalizes an open conjecture as a `sorry`d
   statement, keep it out of the harness entirely.
@@ -230,14 +248,28 @@ is really an existence claim.
   special case is what convinces a reader the result isn't accidentally empty. Prove these in the
   challenge itself rather than `sorry`ing them where you can — they are part of the audit surface.
 - ⚠️ **Don't smuggle in `native_decide` to get an anchor.** It adds `Lean.ofReduceBool`, which is
-  outside the whitelist and will fail the run. Ship without the anchor and say so (a positive
-  existential headline can't be vacuous anyway), or find a kernel-`decide` route.
+  outside the whitelist and will fail the run.
+- ✅ **Reach for `decide +kernel` before giving up on an anchor.** It discharges by *kernel* reduction
+  and adds **no axioms at all**. Crucially, the kernel ignores the irreducibility seal that
+  well-founded recursion puts on a definition — which is exactly why plain `decide` gets stuck on a
+  WF-defined function while `decide +kernel` sails through. It is often *faster* than `native_decide`
+  too (no compile-and-run), thanks to GMP-backed `Nat` literals.
 
-**5. CI-only, and order matters.** `landrun` needs Linux Landlock, so there is no macOS path — expect
-no local end-to-end loop. (A fake-landrun shim is fine for *iterating on challenge files*; it does no
-sandboxing and is worthless as a gate. Label it loudly.) In the workflow, **install `elan` before**
-building the verifier binaries: `lean4export` and `comparator` are themselves Lean projects and need
-`lake`.
+**6. CI-only, and order matters.** `landrun` needs Linux Landlock, so there is no macOS path — expect
+no local end-to-end loop. In the workflow, **install `elan` before** building the verifier binaries:
+`lean4export` and `comparator` are themselves Lean projects and need `lake`.
+
+Because the real gate is remote, **build yourself a local pre-flight** or you will discover every typo
+through a multi-minute CI round-trip. The part worth reproducing is *statement identity*: elaborate the
+challenge module and the solution module separately, print each `theorem_names` entry's type plus the
+type and value of every constant in that type's transitive closure, and diff the two. Identical output
+means comparator's identity check will pass; the rest (kernel replay, nanoda, axioms, sandbox) stays in
+CI. Gotcha #4 above was caught this way, before it cost a single failed run.
+
+🦷 **Teeth-test the pre-flight.** The obvious implementation reports a cheerful ✅ when a theorem name is
+absent from *both* environments — the two "MISSING" outputs are identical, so they diff clean. Fail
+loudly on a missing name instead. **A checker that cannot go red is worse than no checker**, because you
+will trust it.
 
 ## ✅ Review checklist
 
