@@ -6,7 +6,7 @@ description: >-
   formalizations. Use when publishing a formalization you want strangers to be able to
   *check without trusting you*, when a maintainer asks for "a challenge and solution file",
   or when reviewing someone else's harness. Covers what it does and does not buy, the
-  layout, the five things that bite, and which duplication is load-bearing.
+  layout, the seven things that bite, and which duplication is load-bearing.
 ---
 
 # comparator-harness 🔐
@@ -194,7 +194,7 @@ challenge files carry `sorry` by design and most projects build warnings-as-erro
 }
 ```
 
-## ⚠️ The five things that bite
+## ⚠️ The seven things that bite
 
 **1. `lean4export` must match YOUR project's Lean version.** Comparator ships on its own (usually
 newer) toolchain, and its bundled `lean4export` will refuse your oleans with
@@ -221,7 +221,32 @@ Both fixes are the ones above: **the strong pattern** (real names, solution decl
 all three, because there is no delegation to typecheck; or **restate existentially** when the theorem
 is really an existence claim.
 
-**4. ⚠️ The strong pattern breaks when equation-compiler definitions span several project modules.**
+**4. 🥇 The project module must import Mathlib too, or the challenge cannot reproduce its constants.**
+This is the one that will cost you the most time, because the error accuses the wrong thing.
+
+Instance resolution depends on what is imported. A project file that imports narrowly — say
+`import Mathlib.Data.Nat.Log` — elaborates `b ^ e` on `ℕ` using **core's** `instPowNat`. Your
+`Challenge.lean`, which imports Mathlib *by construction*, elaborates the very same source text using
+**Mathlib's** `Monoid.toPow`. The two are definitionally equal, so nothing in the project ever notices
+— but they are **different terms**, and comparator compares `ConstantInfo`s. It will reject the pair
+with something like:
+
+```
+Const does not match between challenge and target 'MyProject.bump'
+```
+
+which reads like a problem with `bump`'s *proof* or its well-founded recursion. It is neither. Fix it
+by making the project module `import Mathlib` (and rebuild — the proofs downstream are typically
+unaffected, since the instances are defeq).
+
+Corollary worth internalizing: **this is why the clone-and-bridge pattern accidentally works.** There,
+both copies are elaborated under the same full-Mathlib imports, so they agree with each other, and the
+project's genuinely-different constant is reached by a *propositional* bridge that papers over the
+instance gap. The strong pattern removes the bridge, which means the gap has nowhere to hide. That is
+a feature — it is the harness telling you your library and your audit surface disagree about what `^`
+means — but it does mean adopting the strong pattern can require touching the project's imports.
+
+**5. ⚠️ The strong pattern breaks when equation-compiler definitions span several project modules.**
 Lean **dedups `match_N` auxiliary declarations within a module, but not across modules.** So if your
 project defines `u` in `Basic.lean`, `vv` in `Stoll.lean` and `gu` in `General.lean` — each getting its
 own matcher — but your *single-file* challenge declares all three together, then `vv` and `gu` silently
@@ -239,7 +264,7 @@ alternative is refactoring the project so the recursive definitions share a modu
 is to leave that one result on the clone-and-bridge pattern and say why in a comment.** A considered
 exception beats a clever workaround nobody can review.
 
-**5. Challenge hygiene.**
+**6. Challenge hygiene.**
 - ✋ **Never put a sorried or open statement in a challenge.** A challenge may contain only theorems
   the solution actually **proves**. If your project formalizes an open conjecture as a `sorry`d
   statement, keep it out of the harness entirely.
@@ -255,7 +280,7 @@ exception beats a clever workaround nobody can review.
   WF-defined function while `decide +kernel` sails through. It is often *faster* than `native_decide`
   too (no compile-and-run), thanks to GMP-backed `Nat` literals.
 
-**6. CI-only, and order matters.** `landrun` needs Linux Landlock, so there is no macOS path — expect
+**7. CI-only, and order matters.** `landrun` needs Linux Landlock, so there is no macOS path — expect
 no local end-to-end loop. In the workflow, **install `elan` before** building the verifier binaries:
 `lean4export` and `comparator` are themselves Lean projects and need `lake`.
 
