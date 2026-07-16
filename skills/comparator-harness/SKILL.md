@@ -51,7 +51,8 @@ formalization.yaml frameworks who will get the attention."*
    [lean-eval](https://lean-lang.org/eval/) leaderboard is built on it.
 4. **[`formalization.yaml`](https://github.com/mathlib-initiative/formalization.yaml)** — models,
    harness, cost, and which parts a human actually did. Disclose AI authorship at the **top of the
-   README**, not buried.
+   README**, not buried. A fillable skeleton (with both a finished and an in-progress variant) ships
+   as `references/formalization.yaml`.
 
 The deeper motivation is one sentence: **it is what lets a stranger check your repo without
 trusting you.** Buzzard, plainly: *"I am not going to download a bunch of AI-generated code off the
@@ -164,13 +165,45 @@ development has an explicit construction. That is often the right call — it ke
 construction out of the trusted closure, shrinking the audit surface *and* tracking the source more
 faithfully. Then the solution carries a one-line derivation. Definitions, still, never get copied.
 
+## 🚧 Before the headline is proved (harnessing an in-progress project)
+
+The pillars above assume your headline theorems are *done*. Many AI-assisted projects are not — the
+interesting theorem is still `sorry` while the scaffolding lands. You do **not** have to wait. A
+challenge may contain only theorems the solution actually **proves** (gotcha #6 below), but those need
+not be the headline: certify the **trusted vocabulary** now, and let the headline join later.
+
+The move: put in `theorem_names` a handful of **proved non-vacuity anchors** — small facts *about the
+very definitions your headline is stated in*. Comparator walks their closure and certifies that the
+Mathlib-only rendering of every definition (`Colmin`, your density notion, "almost all", …) is
+byte-identical to your development's. A reader confirms **today** that your vocabulary means what the
+source means; the headline theorem joins the challenge, unchanged, when it is discharged.
+
+Why do this early — and why the anchors carry *more* weight here than in a finished repo: with no
+headline theorem in the challenge, the **definitions carry the entire claim**, so the Napoleon failure
+("redefine `IsEquilateral`, prove a triviality") has nothing else to trip on. The anchors are the
+guard. Choose them to **separate your intended meaning from a plausible impostor**:
+
+- an explicit witness or computed value, so the theory isn't accidentally empty (`colMin 27 = 1`,
+  `factSum {2,3,5} = 2^7`) — reach for `decide +kernel`, never `native_decide` (gotcha #6);
+- a **distinguishing pair**: the trivial property holds, the empty one does not — rules out a
+  degenerate predicate that *everything*, or *nothing*, satisfies;
+- a value that **only your intended definition gives**: e.g. on the window `{1,2}` a *logarithmic*
+  density puts mass `2/3` on the odds, where a *natural*-density impostor would say `1/2`. One line of
+  Lean pins down which notion you actually formalized.
+
+Everything else — layout, config, the strong pattern, CI — is identical. Your `formalization.yaml`
+`status.scope` must state that the headline is **not yet proved** (see the in-progress notes in
+`references/formalization.yaml`); do not let an in-progress harness read as a finished result.
+
 ## 🗂️ Layout
 
 ```
 Comparator/<Result>/Challenge.lean   -- imports ONLY Mathlib; real bodies; headlines := sorry
 Comparator/<Result>/Solution.lean    -- imports the development; ideally declares nothing
 Comparator/<Result>/config.json      -- theorem_names + permitted_axioms + enable_nanoda
-Comparator.lean                      -- lean_lib root
+Comparator.lean                      -- lean_lib root: a doc-only file. `globs = ["Comparator.+"]`
+                                     -- matches the root module too, so this file must EXIST
+                                     -- (its contents don't matter — a module docstring is fine).
 ```
 
 ```toml
@@ -193,6 +226,24 @@ challenge files carry `sorry` by design and most projects build warnings-as-erro
   "enable_nanoda": true
 }
 ```
+
+## 🔧 Wiring it into CI
+
+The invocation is one line — **`lake env comparator Comparator/<Result>/config.json`**. It exports
+both environments, checks statement identity, replays through the Lean kernel and (with
+`enable_nanoda: true`) nanoda, enforces the axiom whitelist, and runs the solution build under
+`landrun`.
+
+Getting there in CI has real setup, and when it's wrong the errors accuse the wrong thing (gotchas #1,
+#7). Rather than reconstruct it, copy **`references/comparator.yml`** and change two lines: the
+`LEAN4EXPORT_TAG` (your `lean-toolchain` version) and your `lake build <YourLib>` target. It builds the
+four binaries comparator needs — `landrun`, `nanoda`, `lean4export` @ your tag, `comparator` — caches
+them by version, then discovers and runs every `Comparator/*/config.json` (failing loudly if there are
+none, so the gate can't pass vacuously). Make it a **required status check**.
+
+`landrun` needs Linux Landlock, so there is no macOS end-to-end run. Pre-flight the finicky part —
+*statement identity* — locally with **`references/comparator-probe`** (config-driven, runs on macOS);
+it is the generic form of the check that catches gotcha #4 below before a multi-minute CI round-trip.
 
 ## ⚠️ The seven things that bite
 
@@ -289,7 +340,9 @@ through a multi-minute CI round-trip. The part worth reproducing is *statement i
 challenge module and the solution module separately, print each `theorem_names` entry's type plus the
 type and value of every constant in that type's transitive closure, and diff the two. Identical output
 means comparator's identity check will pass; the rest (kernel replay, nanoda, axioms, sandbox) stays in
-CI. Gotcha #4 above was caught this way, before it cost a single failed run.
+CI. Gotcha #4 above was caught this way, before it cost a single failed run. A ready, config-driven
+one ships as `references/comparator-probe` (reads `Comparator/*/config.json`, runs on macOS) — copy it
+to `scripts/`.
 
 🦷 **Teeth-test the pre-flight.** The obvious implementation reports a cheerful ✅ when a theorem name is
 absent from *both* environments — the two "MISSING" outputs are identical, so they diff clean. Fail

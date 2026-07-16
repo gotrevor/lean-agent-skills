@@ -1,0 +1,87 @@
+# Reference formalization.yaml skeleton.
+# Schema: https://github.com/mathlib-initiative/formalization.yaml (v0.3)
+#
+# This is the "how you used AI" disclosure Buzzard's quote asks for. Fill it honestly — the
+# review checklist explicitly rewards reporting the uncomfortable things (deliberate sorrys,
+# unlogged model versions, wall-clock that overstates effort) over a tidy fiction. Also disclose
+# AI authorship at the TOP OF THE README, not only here.
+#
+# Two shapes below. Use the FINISHED shape when your headlines are proved. Use the IN-PROGRESS
+# shape when they are not (see SKILL.md "Before the headline is proved") — its harness certifies
+# the trusted vocabulary + anchors, and `status.scope` must say the headline is not yet proved.
+
+version: "v0.3"
+
+project:
+  name: "<ProjectName>"
+  authors: ["<Your Name>"]
+  license: "Apache-2.0"
+
+sources:
+  - title: "<paper / problem title>"
+    authors: ["<author>"]
+    id: "<doi or url>"
+    type: "paper"          # or: preprint | problem
+    author_contacted: "n/a"
+
+status:
+  # FINISHED shape: a one-paragraph description of what is proved and how it is machine-checked.
+  # IN-PROGRESS shape: STATE UP FRONT that the headline is not proved, then say what the harness
+  # certifies today (the Mathlib-only definitions the headline is stated in, + non-vacuity anchors).
+  scope: >-
+    <what is proved / what the harness certifies. If in progress, say so in the first sentence.>
+  sorry_count: 0            # honest count; ">0 (…)" for an in-progress project
+  sorry_in_definitions: 0   # if this is not 0, explain — a sorried definition is a red flag
+  axioms: ["propext", "Quot.sound", "Classical.choice"]
+
+  # One entry per comparator-harnessed headline (FINISHED) or per proved anchor (IN-PROGRESS).
+  main_results:
+    - declaration: "<Namespace.headline_or_anchor>"
+      file: "<path/to/Statement.lean>"
+      sorry_count: 0
+      axioms: ["propext", "Quot.sound", "Classical.choice"]
+      comparator_config: "Comparator/<Result>/config.json"
+
+automation:
+  methods:
+    - method: "agent"           # a human-in-the-loop interactive tool
+      framework: "<e.g. Claude Code>"
+      tool_setup: >-
+        <how the tool was driven; note that STATEMENTS were human-reviewed, since #print axioms
+        certifies proofs and not statements.>
+      cost:
+        hardware: "<e.g. local laptop; API-only for the models>"
+    - method: "autonomous"      # a long-running unsupervised harness, if any — omit if none
+      framework: "<e.g. a custom grind harness>"
+      tool_setup: >-
+        <gates that mattered: build-green, axiom gate, no unreviewed maxHeartbeats bumps, etc.>
+      cost:
+        hardware: "<...>"
+  spend_usd: >-
+    <a real figure, or state plainly that usage was subscription-based and give none rather than
+    invent one.>
+  notes: >-
+    <models used; say "not logged / not reconstructed" rather than guessing versions. Wall-clock,
+    if given, should be labelled as an upper bound (calendar span overstates effort).>
+
+review:
+  status: "self-assessed"       # or "peer-reviewed" with reviewers named
+  reviewers: ["<Your Name>"]
+  notes: >-
+    <what is machine-enforced on every push (comparator with enable_nanoda, the axiom whitelist,
+    the landrun sandbox). State the residual risk plainly: comparator proves the solution
+    establishes the CHALLENGE's statements; a human must still read Challenge.lean's DEFINITIONS
+    against the source and agree they say what the source says. That file is small on purpose.>
+
+alignment:
+  namespace: "<Namespace>"
+  statements:
+    - source: "<paper theorem, in words>"
+      lean: "<Namespace.headline>"
+      module: "<Namespace.Statement>"
+      status: "proved"          # or "in-progress" / "not-formalized" (with a note)
+
+acknowledgements: >-
+  Mathlib and the Lean FRO. leanprover/comparator and the nanoda kernel, which make this repo
+  checkable by someone who does not trust, or run, your code. The Lean Zulip #AI-authored-projects
+  channel, where this convention was worked out.
