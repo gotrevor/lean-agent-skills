@@ -119,6 +119,16 @@ def keep_prefixes(names: list[str]) -> list[str]:
 
 
 def run(module: str, names: list[str]) -> tuple[bool, str]:
+    # Build the module first. `lake env lean` below imports it and reads its .olean rather than
+    # re-elaborating -- so a STALE olean (source edited since the last build) would silently compare
+    # the OLD statement and hand back a wrong verdict. `lake build` is a no-op when the olean is
+    # fresh; when it is stale it rebuilds; when the source is broken it fails, and we treat that as
+    # red. This is the one remaining SILENT failure mode of the tool, so close it rather than trust
+    # the caller to have built first.
+    b = subprocess.run(["lake", "build", module], cwd=REPO, capture_output=True, text=True)
+    if b.returncode != 0:
+        return False, f"`lake build {module}` failed (treating as red):\n{b.stdout}{b.stderr}"
+
     src = PROBE.format(
         module=module,
         names=", ".join(f"`{n}" for n in names),
