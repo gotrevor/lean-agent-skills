@@ -26,7 +26,11 @@ import subprocess
 import sys
 import tempfile
 
-REPO = pathlib.Path(__file__).resolve().parent.parent
+# The repo to probe is the current working directory, NOT this script's location -- so the file can
+# live in exactly one place (e.g. the comparator-harness skill) and be run against any project via a
+# symlink/stub on PATH, rather than copied into every repo's scripts/ (a vendored copy is what let the
+# keep-list rot in the first place). Run it from a repo root that contains Comparator/<Result>/.
+REPO = pathlib.Path.cwd()
 
 # Emits, for each requested theorem: its type, then the type+value of every constant its type
 # transitively depends on. Core/Mathlib constants are skipped -- both environments import Mathlib,
@@ -135,7 +139,14 @@ def run(module: str, names: list[str]) -> tuple[bool, str]:
 
 def main() -> int:
     only = sys.argv[1] if len(sys.argv) > 1 else None
-    configs = sorted((REPO / "Comparator").glob("*/config.json"))
+    all_configs = sorted((REPO / "Comparator").glob("*/config.json"))
+    if not all_configs:
+        # No configs under cwd -- almost always "run from the wrong directory". Fail loudly rather
+        # than loop zero times and return a vacuous success.
+        print(f"no Comparator/*/config.json under {REPO} -- run from a repo root that has them",
+              file=sys.stderr)
+        return 2
+    configs = all_configs
     if only:
         configs = [c for c in configs if c.parent.name == only]
         if not configs:
