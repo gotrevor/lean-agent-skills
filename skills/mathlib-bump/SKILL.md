@@ -5,7 +5,7 @@ description: >-
   goes red after bumping `lean-toolchain` / the mathlib rev and the errors carry no
   deprecation warning to grep for — `unsolved goals`, `made no progress`, `unknown
   constant`, `Function expected`. A symptom → cause → fix catalog of the no-warning
-  breakages. First window: v4.29.1 → v4.31.0.
+  breakages. Windows: v4.29.1 → v4.31.0, plus a provisional v4.31.0 → v4.32.0 draft.
 ---
 
 # mathlib bump cookbook
@@ -45,19 +45,30 @@ entries can now be pinned to the 4.30 vs 4.31 step.
 
 ## Scope
 
-These notes were collected forward-porting several mathlib projects from the **v4.29.1** toolchain to
-**v4.31.0** (skipping v4.30.0). A given change may have landed in either the 4.30 or 4.31 step.
-Cross-referencing the Lean release notes (see [Primary sources](#primary-sources)) now pins a few - e.g.
-entry I's app-elaborator beta-reduction and the entry-F defeq/transparency tightening are 4.31 changes - but
-most are still un-bisected, and I'd welcome anyone who pins down the rest. Each entry is empirically
-grounded: the error
-was hit in a real proof, the fix made it compile. Corrections, sharper explanations, and additions for
-other version windows are very welcome — **issues and PRs open**.
+The first catalog was collected forward-porting several mathlib projects from the **v4.29.1** toolchain
+to **v4.31.0** (skipping v4.30.0). A given change may have landed in either the 4.30 or 4.31 step.
+Cross-referencing the Lean release notes (see [Primary sources](#primary-sources)) pins a few - e.g. the
+app-elaborator beta-reduction and defeq/transparency tightening - but most remain un-bisected. Its entries
+are empirically grounded: the error was hit in a real proof and the fix made it compile.
+
+The **v4.31.0 → v4.32.0** catalog is deliberately marked provisional. It is seeded from the official
+release notes, Mathlib's own RC adaptation commit, and public downstream bump commits, with evidence labels
+on every entry. Promote it to the same empirical standard only as fleet ports reproduce the symptoms.
+Corrections, sharper explanations, and additions for other version windows are very welcome — **issues
+and PRs open**.
 
 ## How to use it
 
-Find your symptom in [`v4.29.1-to-v4.31.0.md`](v4.29.1-to-v4.31.0.md). Each entry gives the error you see,
-what changed underneath, and a minimal fix. The patterns are grouped:
+Open the catalog matching the version pair:
+
+- [`v4.29.1-to-v4.31.0.md`](v4.29.1-to-v4.31.0.md) — mature, empirically grounded catalog.
+- [`v4.31.0-to-v4.32.0.md`](v4.31.0-to-v4.32.0.md) — provisional seed with an evidence ledger for fleet
+  validation. Its **Part 4** is worth reading on any bump regardless of version: warnings-as-errors
+  repos, the satellite version pins outside `lean-toolchain`/lakefile/manifest, and why
+  `defaultTargets` is the wrong build scope.
+
+Each entry gives the error you see, what changed underneath, and a minimal fix. In the mature catalog,
+the patterns are grouped:
 
 - **Behavior changes (no warning)** — the high-value ones; A–K, M, P, S.
 - **Renames / signature changes that hard-error** — L, N, O, Q, R, T (a deprecation alias was missing or only
@@ -134,6 +145,9 @@ The official release notes that pin and explain the Lean-core behavior changes (
 - [Lean 4.30.0 release notes](https://lean-lang.org/doc/reference/latest/releases/v4.30.0/) —
   `inferInstanceAs` no longer a synonym for `inferInstance`, typeless inductive-constructor binders needing
   a type, and the removal of `change … with`.
+- [Lean 4.32.0 release notes](https://lean-lang.org/doc/reference/latest/releases/v4.32.0/) — the new `do`
+  elaborator becoming the default, nested-action control flow, option-based Lake linters, and the `Std.Time`
+  redesign. The provisional v4.31 → v4.32 catalog links the Mathlib and downstream evidence commits.
 
 mathlib has **no single changelog**: its own tactic-behavior shifts (`ring` erroring on no-progress, the
 `convert` over-split) and lemma renames (entries D, L, N, O, Q here) live in the bump PRs and
