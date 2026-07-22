@@ -6,7 +6,7 @@ description: >-
   formalizations. Use when publishing a formalization you want strangers to be able to
   *check without trusting you*, when a maintainer asks for "a challenge and solution file",
   or when reviewing someone else's harness. Covers what it does and does not buy, the
-  layout, the seven things that bite, and which duplication is load-bearing.
+  layout, the eight things that bite, and which duplication is load-bearing.
 ---
 
 # comparator-harness 🔐
@@ -245,7 +245,7 @@ none, so the gate can't pass vacuously). Make it a **required status check**.
 *statement identity* — locally with **`references/comparator-probe`** (config-driven, runs on macOS);
 it is the generic form of the check that catches gotcha #4 below before a multi-minute CI round-trip.
 
-## ⚠️ The seven things that bite
+## ⚠️ The eight things that bite
 
 **1. `lean4export` must match YOUR project's Lean version.** Comparator ships on its own (usually
 newer) toolchain, and its bundled `lean4export` will refuse your oleans with
@@ -349,6 +349,28 @@ absent from *both* environments — the two "MISSING" outputs are identical, so 
 loudly on a missing name instead. **A checker that cannot go red is worse than no checker**, because you
 will trust it.
 
+**8. 🧊 Pin all four verifier binaries, and put every pin in the cache key.** Comparator's README says
+to build `landrun`, `nanoda` and `comparator` from `main`. Do that *and* cache the binaries under a key
+that does not name them, and you get something worse than irreproducibility: once the key is warm, the
+whole build step is **skipped on every run**, and the job replays binaries frozen at whatever `main`
+was the day the key was first populated. It reports green while verifying nothing new about its own
+toolchain — and the tell is buried in the step list, not the check mark.
+
+This is the sibling of the teeth-test above, and the nastier one: there the checker *could not* go red;
+here it was **never run at all**, and the cache made "not run" indistinguishable from "passed."
+
+It bit for real on 2026-07-22. A mathlib v4.31 → v4.32 bump changed `LEAN4EXPORT_TAG` (gotcha #1 —
+lean4export must track your toolchain), which rotated the key and forced the first true rebuild in
+weeks. `landrun` had merged its `urfave/cli` v2 → v3 migration hours earlier; v3 consumes the bare `--`
+terminator, so comparator's `lean4export <module> -- <constants…>` arrived as
+`lean4export <module> <constants…>` and died with `unknown module prefix 'Nat'` — every result, at the
+first export. Nothing was wrong with the mathematics or the bump.
+
+`references/comparator.yml` ships the fixed form: `LANDRUN_REV` / `NANODA_REV` / `COMPARATOR_REV`
+pinned by SHA, all three interpolated into the cache key so bumping one rotates the cache and the
+rebuild actually happens. Refresh them deliberately, and re-verify when you do — an upstream `main` is
+someone else's working branch, not a release.
+
 ## ✅ Review checklist
 
 Reviewing a harness (yours or someone else's) — in priority order:
@@ -362,7 +384,9 @@ Reviewing a harness (yours or someone else's) — in priority order:
 5. Do the `theorem_names` cover the **headline claims**, or a weakened shadow of them?
 6. `permitted_axioms` = `propext`, `Quot.sound`, `Classical.choice` and nothing else.
 7. Any **non-vacuity anchor**? A bound with no witness may be certifying an empty theory.
-8. Is comparator a **required status check**, or a workflow that can silently rot?
+8. Is comparator a **required status check**, or a workflow that can silently rot? And are its
+   verifier binaries **pinned, with the pins in the cache key** (gotcha #8)? A cached check is a
+   frozen check.
 9. `formalization.yaml` present, and does it report the uncomfortable things (deliberate `sorry`s,
    unlogged model versions, wall-clock that overstates effort) rather than a tidy fiction?
 
