@@ -5,7 +5,8 @@ description: >-
   goes red after bumping `lean-toolchain` / the mathlib rev and the errors carry no
   deprecation warning to grep for — `unsolved goals`, `made no progress`, `unknown
   constant`, `Function expected`. A symptom → cause → fix catalog of the no-warning
-  breakages. Windows: v4.29.1 → v4.31.0, plus a provisional v4.31.0 → v4.32.0 draft.
+  breakages. Windows: v4.29.1 → v4.31.0, a provisional v4.31.0 → v4.32.0 draft, and
+  v4.32.0 → v4.33.1 (whose headline hazard is 303 aliases deleted with no deprecation).
 ---
 
 # mathlib bump cookbook
@@ -66,6 +67,12 @@ Open the catalog matching the version pair:
   validation. Its **Part 4** is worth reading on any bump regardless of version: warnings-as-errors
   repos, the satellite version pins outside `lean-toolchain`/lakefile/manifest, and why
   `defaultTargets` is the wrong build scope.
+- [`v4.32.0-to-v4.33.1.md`](v4.32.0-to-v4.33.1.md) — the deletion window. Mathlib dropped **303
+  `alias` declarations outright** here, with no `@[deprecated]` tombstone, so each one surfaces as a
+  bare `Unknown identifier`. Read entry **A** before touching any `mul_le_mul_*'`: the replacement is
+  **crossed**, and dropping the prime silently selects the other lemma. The companion
+  [`v4.32.0-to-v4.33.1-deleted-aliases.tsv`](v4.32.0-to-v4.33.1-deleted-aliases.tsv) is the full
+  generated old → new table with ecosystem usage counts.
 
 Each entry gives the error you see, what changed underneath, and a minimal fix. In the mature catalog,
 the patterns are grouped:
