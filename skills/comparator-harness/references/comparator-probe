@@ -190,24 +190,33 @@ def main() -> int:
             bad += 1
             continue
 
-        # An EMPTY closure means the probe walked into zero project definitions -- it compared only
-        # the theorem TYPES, never a single definition body. That is the silent-false-green the old
-        # hardcoded keep-list caused (prefixes matched nothing). For a comparator harness the
-        # statement is supposed to be stated IN the project's own definitions, so an empty closure is
-        # never a legitimate pass -- fail loudly, same principle as the MISSING guard above.
+        # An EMPTY closure usually means the probe walked into zero project definitions -- it
+        # compared only the theorem TYPES, never a single definition body. That is the
+        # silent-false-green the old hardcoded keep-list caused (prefixes matched nothing). But it
+        # has one legitimate reading: a statement written ENTIRELY in Mathlib's own vocabulary
+        # (e.g. `Transcendental ℚ Real.pi`) has no project definition to walk, and the type diff IS
+        # the whole identity check. Tell the two apart by looking at the rendered types themselves:
+        # a keep-prefix appearing in a type line while no CONST was walked means the walker missed
+        # real project constants -- the bug case, still red.
+        note = ""
         if "  CONST " not in out_c:
-            print(f"❌ {name}: EMPTY closure -- walked into 0 project definitions. keep-prefixes "
-                  f"{keep_prefixes(names)} matched no constant in the theorem types, so only the "
-                  f"statement TYPES were compared, not definition bodies. (Do the theorems live "
-                  f"under a different namespace than their config entries?)")
-            bad += 1
-            continue
+            type_lines = [ln for ln in out_c.splitlines() if ln.startswith("  type: ")]
+            missed = [p for p in keep_prefixes(names)
+                      if any(p in ln for ln in type_lines)]
+            if missed:
+                print(f"❌ {name}: EMPTY closure -- the theorem types mention keep-prefixes "
+                      f"{missed} but the walker kept no constant, so only the statement TYPES "
+                      f"were compared, not definition bodies. (Do the definitions live under a "
+                      f"different namespace than their config entries?)")
+                bad += 1
+                continue
+            note = " - types are pure Mathlib vocabulary; no project definitions to walk"
 
         # The challenge's theorem *values* are `sorryAx`; only the solution has real proofs. The
         # identity check is about types + the closure of the type, which is what we print, so the
         # two outputs must agree exactly.
         if out_c == out_s:
-            print(f"✅ {name}: statement closure identical ({len(names)} theorem(s))")
+            print(f"✅ {name}: statement closure identical ({len(names)} theorem(s)){note}")
         else:
             print(f"❌ {name}: statement closure DIFFERS")
             import difflib
