@@ -41,12 +41,4 @@ Tell: you are about to say "recorded in X.md" and no `.lean` file changed.  What
 - Lean Zulip and leanprover-community GitHub ban LLM-written messages.  The agent supplies points; I write the post.
 - Peers formalizing nearby are collaborators.  A parallel proof is independent verification, not a race.
 
-## 🗺️ On my machine
-
-These pointers resolve only on my Mac and in my treadmill box.  Elsewhere, skip them.
-- **Before substantial Lean work, read** `~/personal/claude/knowledge/core/decisions/lean-decisions.md`.  It covers the comparator standard, the CI maturity ladder, faithfulness audits, dependency re-homing, machinery walls and the target catalog.
-- `.lake`, pins and the shared store are a known blind spot.  Read `~/personal/claude/knowledge/core/projects/lean-universe-architecture.md` and `~/src/lean-universe/LAKE-BASE-DESIGN.md` before touching them.
-- History behind these rules:
-  - `~/personal/claude/knowledge/core/decisions/lean-is-the-record.md`;
-  - `literature-results-as-hypothesis-props.md` and `agent-operated-treadmills.md`, both in the same folder.
-- Lean reference corpus (tactic gotchas, mathlib facts): `~/personal/claude/knowledge/core/projects/lean-journey/reference/`.
+@~/personal/claude/lean-personal.md
