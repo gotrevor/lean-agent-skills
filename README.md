@@ -20,9 +20,16 @@ readable on its own, and shaped as a [Claude Code / Agent skill](https://docs.cl
 | [`lean-erdos-review`](skills/lean-erdos-review/) | Preparing or reviewing a submission to [formal-conjectures](https://github.com/google-deepmind/formal-conjectures) (especially Erdős problems) against the project's house style: statement faithfulness, `answer()`, `.variants.*`, LaTeX-not-backtick docstrings, and references verified against source. |
 | [`comparator-harness`](skills/comparator-harness/) | Publishing a formalization you want strangers to be able to **check without trusting you** — the `Challenge.lean` / `Solution.lean` / [`comparator`](https://github.com/leanprover/comparator) / `formalization.yaml` standard the Lean community now expects of AI-assisted work. What it does and doesn't buy, the layout, the eight things that bite (including the cached-check trap), and which duplication is load-bearing. |
 
-## Standing context
+## Standing context for agent sessions
 
-[`LEAN-CONTEXT.md`](LEAN-CONTEXT.md) is the short rule sheet every one of my Lean repos `@`-includes into its agent context.  It starts with "if it's not in Lean, it doesn't exist": results, beliefs, counterexamples and literature inputs are recorded as Lean statements, and markdown is for direction only.  It also covers tiers, who grinds, builds and bumps, and outward etiquette.
+[`context/`](context/) holds the short rule sheets my Lean repos `@`-include into their agent context.  Each repo loads the lane it works in, and both lanes import the shared [`LEAN-CORE.md`](context/LEAN-CORE.md): Lean is the record, faithfulness, builds and bumps, outward etiquette.
+
+| Lane | For | Differs on |
+|---|---|---|
+| [`LEAN-NEW-MATH.md`](context/LEAN-NEW-MATH.md) | research on open questions | literature results as hypothesis `Prop`s, `sorry` with a confidence, and `native_decide` are all **encouraged**; "if it's not in Lean, it doesn't exist" |
+| [`LEAN-FORMALIZE.md`](context/LEAN-FORMALIZE.md) | known results, to publish | none of those survive: no `sorry`, no extra axioms or literature `Prop`s, no `native_decide`, statements faithful to the source |
+
+Wiring: put `@<path>/context/LEAN-NEW-MATH.md` (or `LEAN-FORMALIZE.md`) in a gitignored `CLAUDE.local.md`, or in the repo's `CLAUDE.md` / `AGENTS.md`.  Claude Code expands nested `@` imports, relative to the importing file.
 
 ## Why this exists
 

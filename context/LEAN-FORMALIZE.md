@@ -1,0 +1,25 @@
+@LEAN-CORE.md
+
+# Lane: formalizing known results, to publish
+
+This repo formalizes **published, known mathematics** so that a stranger can check it without trusting us.  The finish line is a faithful statement with a complete proof.
+
+## 🏁 The finish line
+
+- **No `sorry`.**
+- **No extra axioms.**  `#print axioms` on every headline theorem shows only `propext`, `Classical.choice` and `Quot.sound`.
+  - No hand-declared `axiom`.
+  - No hypothesis `Prop`s standing in for literature results.  Every dependency is proved here, or comes from mathlib or a `require`d project.
+- **No `native_decide`.**  Use `decide +kernel` or a real proof.
+- **No unexplained `maxHeartbeats` boosts.**  No silenced linters, and no deprecated names.
+- **Faithful statements.**  Read the source and cite the theorem number.  Check every hypothesis, quantifier and index base against it.  A cleaner but different statement is a different theorem.
+- **Checkable by strangers:** follow the [`comparator-harness`](../skills/comparator-harness/) standard (`Challenge.lean` / `Solution.lean` / `formalization.yaml`).  Review the diff with [`lean-review`](../skills/lean-review/).  For formal-conjectures, use [`lean-erdos-review`](../skills/lean-erdos-review/).
+
+## 🪜 Two phases
+
+1. **Get the proof down.**  `native_decide`, deprecations, boosts and temporary `sorry`s are all fine while grinding; don't fuss.
+2. **Distribution prep.**  A linter-like pass strips everything the finish line forbids.  The repo is done only when that pass is clean.
+
+## 🧾 The record, in this lane
+
+Statements of record are proved theorems.  A temporary `sorry` is a work item, not a belief, so it carries a short note on what remains.  An unproved claim or literature input that the project genuinely needs belongs in the [new-math lane](LEAN-NEW-MATH.md), not here.
