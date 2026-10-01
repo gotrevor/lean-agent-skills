@@ -1,8 +1,6 @@
 # Lean sessions: the shared core
 
-The common rules for agent sessions in my Lean repos.  A repo never loads this file directly.  Every repo loads [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md), which imports this one, because **the default is new mathematics**.
-
-[`LEAN-FORMALIZE.md`](LEAN-FORMALIZE.md) is not auto-loaded.  When I say I want to formalize or publish a known result, read it first; for that work it overrides the new-math defaults.  -Trevor
+Shared rules for agent sessions in my Lean repos, loaded once through [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).  -Trevor
 
 ## 🧾 Lean is the record
 
