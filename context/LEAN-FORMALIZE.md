@@ -1,6 +1,8 @@
+@LEAN-CORE.md
+
 # Lane: formalizing known results, to publish
 
-**Not auto-loaded.**  Read this when the user asks to formalize or publish a known result.  [`LEAN-CORE.md`](LEAN-CORE.md) is already in context through the new-math lane, so it is not imported again here.  For that work it overrides the defaults in [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).  Everything else in the session stays new-math.
+**Not auto-loaded.**  Read this when the user asks to formalize or publish a known result.  For that work it overrides the defaults in [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).  Everything else in the session stays new-math.
 
 The aim here is **published, known mathematics** that a stranger can check without trusting us.  The finish line is a faithful statement with a complete proof.
 
