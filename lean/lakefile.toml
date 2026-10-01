@@ -1,0 +1,7 @@
+name = "LeanLedger"
+version = "0.1.0"
+defaultTargets = ["LeanLedger"]
+
+[[lean_lib]]
+name = "LeanLedger"
+globs = ["LeanLedger.+"]

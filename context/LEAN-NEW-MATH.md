@@ -19,7 +19,7 @@ Every conclusion gets a Lean **statement** in the same turn that draws it.  The 
 | from the literature | a named hypothesis `Prop`, cited and faithful-or-weaker, never an `axiom` |
 | believed (English proof or numerics) | a frozen statement with `sorry`.  Its docstring carries the confidence, the English proof, and the evidence *with its control* |
 | open conjecture | a `def … : Prop` node, with its evidence and what it would imply |
-| closed route | a row in the repo's `Maze.lean` whose verdict rests on statements: the obstruction as a theorem (or `sorry` with confidence), and the reopen condition as a `def … : Prop` node.  The row names both |
+| closed route | a row in the repo's `Maze.lean` whose verdict rests on statements: the obstruction as a theorem (or `sorry` with confidence), and the reopen condition as a `def … : Prop` node.  The row names both, through [`#maze_audit`](../lean/README.md), which fails the build on a prose-only row |
 
 Tells:
 - You offer the Lean statement as optional ("if you want it in Lean").
