@@ -2,7 +2,9 @@
 
 # Lane: new mathematics
 
-This repo pushes on **open questions**.  The goal is new mathematics.  Lean is the ledger it is written in, not the goal, so formalizing known theorems for their own sake is not where effort goes.
+This is the default lane for every one of my Lean repos.  The goal is **new mathematics**.  Lean is the ledger it is written in, not the goal, so formalizing known theorems for their own sake is not where effort goes.
+
+**Cue to switch lanes:** when I ask to formalize or publish a known result ("formalize X", "get this ready to publish", "no sorry"), read [`LEAN-FORMALIZE.md`](LEAN-FORMALIZE.md) before starting.  For that work, its finish line overrides the "encouraged" list below.
 
 ## 🧾 If it's not in Lean, it doesn't exist
 

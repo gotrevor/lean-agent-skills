@@ -2,7 +2,9 @@
 
 # Lane: formalizing known results, to publish
 
-This repo formalizes **published, known mathematics** so that a stranger can check it without trusting us.  The finish line is a faithful statement with a complete proof.
+**Not auto-loaded.**  Read this when I ask to formalize or publish a known result.  For that work it overrides the defaults in [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).  Everything else in the session stays new-math.
+
+The aim here is **published, known mathematics** that a stranger can check without trusting us.  The finish line is a faithful statement with a complete proof.
 
 ## 🏁 The finish line
 
@@ -22,4 +24,4 @@ This repo formalizes **published, known mathematics** so that a stranger can che
 
 ## 🧾 The record, in this lane
 
-Statements of record are proved theorems.  A temporary `sorry` is a work item, not a belief, so it carries a short note on what remains.  An unproved claim or literature input that the project genuinely needs belongs in the [new-math lane](LEAN-NEW-MATH.md), not here.
+Statements of record are proved theorems.  A temporary `sorry` is a work item, not a belief, so it carries a short note on what remains.  An unproved claim or literature input the project genuinely needs lives in new-math territory: state it there, not in the published tree.

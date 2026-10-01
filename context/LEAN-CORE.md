@@ -1,10 +1,8 @@
 # Lean sessions: the shared core
 
-The common rules for agent sessions in my Lean repos.  A repo never loads this file directly.  It loads one lane file, which imports this one:
-- [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md) for research on open questions;
-- [`LEAN-FORMALIZE.md`](LEAN-FORMALIZE.md) for formalizing known results to publish.
+The common rules for agent sessions in my Lean repos.  A repo never loads this file directly.  Every repo loads [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md), which imports this one, because **the default is new mathematics**.
 
-A repo doing both loads both.  -Trevor
+[`LEAN-FORMALIZE.md`](LEAN-FORMALIZE.md) is not auto-loaded.  When I say I want to formalize or publish a known result, read it first; for that work it overrides the new-math defaults.  -Trevor
 
 ## 🧾 Lean is the record
 
