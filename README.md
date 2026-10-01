@@ -22,7 +22,7 @@ readable on its own, and shaped as a [Claude Code / Agent skill](https://docs.cl
 
 ## Standing context for agent sessions
 
-[`context/`](context/) holds the short rule sheets my Lean repos load into their agent context.  The default leans to **new mathematics**.
+[`context/`](context/) holds short rule sheets for a Lean repo's agent context.  The default leans to **new mathematics**.
 
 | File | Loaded | For |
 |---|---|---|

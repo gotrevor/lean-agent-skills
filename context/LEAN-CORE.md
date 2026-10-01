@@ -1,6 +1,6 @@
 # Lean sessions: the shared core
 
-Shared rules for agent sessions in my Lean repos, loaded once through [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).  -Trevor
+Shared rules for agent sessions in a Lean repo, loaded once through [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).
 
 ## 🧾 Lean is the record
 
@@ -19,26 +19,20 @@ Tell: you are about to say "recorded in X.md" and no `.lean` file changed.  What
 
 ## 🛞 Who grinds
 
-- Proof iteration runs on an unattended **treadmill** (Opus, low effort), not in an interactive session.
-- The interactive session steers: it plans phases, freezes statements, and reviews laps.
+- Proof iteration belongs in an unattended loop, not in an interactive session.
+- The interactive session steers: it plans phases, freezes statements, and reviews the loop's output.
 - Writing a statement and building it is steering, not grinding.
 
-## 🏗️ Builds, pins and bumps
+## 🏗️ Pins and bumps
 
-- **Before `lake build` or `lake exe cache get`** in a repo not yet built this session, check the shared store: `lake-base status <ver>`, then `relake plan --from ~/.lake-base/<ver> <repo>`.
-  - "Decompressing N files" means a fresh ~7 GB tree, when a ~30 MB copy-on-write clone was available.
-  - The `relake` dedup `--from` is always the canonical store `~/.lake-base/<ver>`, never a sibling working repo.
-- **Bump mathlib only with `lean-bump <repo> --to <ver>`.**  It edits toolchain, lakefile and manifest together, and gates on build plus `#print axioms`.
-  - Never use a raw `lake update`, and never hand-edit the pins.
-  - If you finish a bump by hand, run `lean-bump <repo> --finish`.  That is what runs the faithfulness gate.
-  - `.bump-axioms` is a transient, gitignored gate input; never commit it.
-  - When the build goes red with no deprecation to follow, use the [`mathlib-bump`](../skills/mathlib-bump/) skill.
+- Never hand-edit the toolchain, lakefile or manifest pins one at a time, and never run a bare `lake update` to "fix" a build.  Bump all three together, then gate on the build plus `#print axioms` of the headline theorems.
+- When a bump goes red with no deprecation to follow, use the [`mathlib-bump`](../skills/mathlib-bump/) skill.
 
 ## 🤝 Outward
 
 - **Read the target repo's own `AGENTS.md` / `CONTRIBUTING`** before writing for it.
-- No mathlib PRs and no OEIS contributions while their AI policies stand.
-- Lean Zulip and leanprover-community GitHub ban LLM-written messages.  The agent supplies points; I write the post.
+- Check a venue's AI policy before contributing to it.
+- Lean Zulip and leanprover-community GitHub ban LLM-written messages.  The agent supplies points; the human writes the post.
 - Peers formalizing nearby are collaborators.  A parallel proof is independent verification, not a race.
 
 @~/personal/claude/lean-personal.md
