@@ -20,6 +20,10 @@ readable on its own, and shaped as a [Claude Code / Agent skill](https://docs.cl
 | [`lean-erdos-review`](skills/lean-erdos-review/) | Preparing or reviewing a submission to [formal-conjectures](https://github.com/google-deepmind/formal-conjectures) (especially Erdős problems) against the project's house style: statement faithfulness, `answer()`, `.variants.*`, LaTeX-not-backtick docstrings, and references verified against source. |
 | [`comparator-harness`](skills/comparator-harness/) | Publishing a formalization you want strangers to be able to **check without trusting you** — the `Challenge.lean` / `Solution.lean` / [`comparator`](https://github.com/leanprover/comparator) / `formalization.yaml` standard the Lean community now expects of AI-assisted work. What it does and doesn't buy, the layout, the eight things that bite (including the cached-check trap), and which duplication is load-bearing. |
 
+## Standing context
+
+[`LEAN-CONTEXT.md`](LEAN-CONTEXT.md) is the short rule sheet every one of my Lean repos `@`-includes into its agent context.  It starts with "if it's not in Lean, it doesn't exist": results, beliefs, counterexamples and literature inputs are recorded as Lean statements, and markdown is for direction only.  It also covers tiers, who grinds, builds and bumps, and outward etiquette.
+
 ## Why this exists
 
 AI can now produce a *lot* of Lean, fast. What it can't reliably do yet is the last mile:
