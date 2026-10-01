@@ -10,6 +10,8 @@ This is the default lane.  The goal is **new mathematics**.  Lean is the ledger 
 
 Every conclusion gets a Lean **statement** in the same turn that draws it.  The proof may wait; the statement may not.
 
+**Statement first, prose second.**  Write the declaration before the paragraph that explains it.  The doc then cites the declaration by name.  A doc written first absorbs the specifics, and the Lean pass afterwards records only the headline.
+
 | Status | Lean form |
 |---|---|
 | true | a theorem |
@@ -17,9 +19,15 @@ Every conclusion gets a Lean **statement** in the same turn that draws it.  The 
 | from the literature | a named hypothesis `Prop`, cited and faithful-or-weaker, never an `axiom` |
 | believed (English proof or numerics) | a frozen statement with `sorry`.  Its docstring carries the confidence, the English proof, and the evidence *with its control* |
 | open conjecture | a `def … : Prop` node, with its evidence and what it would imply |
-| closed route | a row in the repo's `Maze.lean`, with `reopenIf` naming the new idea that would justify reopening it |
+| closed route | a row in the repo's `Maze.lean` whose verdict rests on statements: the obstruction as a theorem (or `sorry` with confidence), and the reopen condition as a `def … : Prop` node.  The row names both |
 
-Tell: you offer the Lean statement as optional ("if you want it in Lean"), or a finding's only home is a `PROBE-` file.
+Tells:
+- You offer the Lean statement as optional ("if you want it in Lean").
+- A finding's only home is a `PROBE-` file.
+- **A finding's only Lean home is a string**: a docstring, or the text of a `Maze.lean` row.  Prose inside a `.lean` file is still prose.  The compiler checks the statement and never reads the string, so "a `.lean` file changed" proves nothing.
+- A refereed or self-corrected argument whose corrections went into the doc.  Each correction is a conclusion: a weakened statement, a withdrawn step, a newly named missing estimate.
+
+**Report-back check:** every conclusion in a report-back names the declaration that records it.  A conclusion with no name to cite has not been recorded.
 
 ## ✅ Encouraged here (and wrong in the formalize lane)
 
