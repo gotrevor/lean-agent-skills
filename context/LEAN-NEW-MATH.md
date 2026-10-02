@@ -44,3 +44,10 @@ Tells:
   - test the mechanism on known-false sibling systems before building on it.
 - **Read the repo's negative inventory first** (`Maze.lean`, the retired lists in `DIRECTION.md`) before proposing a lemma.  An idea that survives your reasoning has often already met the repo's.
 - **Check for prior work.**  A paper's "open question" is a dated claim: look at forward citations and open PRs before treating it as open.
+
+## 📣 Telling people about a result
+
+- **The outward artifact is a neutrally addressed note in the repo**, `docs/notes/<topic>.md`, written once and pointed to by everyone.  It has no salutation and no single addressee.
+- **The note states**: the question and its source; each result as a theorem, linked to its declaration at a pinned commit; every cited hypothesis, with how faithful its transcription is and which step most needs an expert check; what is *not* claimed, including the limits of the prior-work search; and how to build it.
+- **Outreach itself is a very brief intro and the pointer**: a sentence or two in the sender's own words, then the link.  The mathematics, caveats and attribution live in the note, so they are written once and corrected in one place.
+- Lead with the mathematics.  Don't recite the certificate (axiom lists, sorry counts) in the note.
