@@ -1,6 +1,6 @@
 # Lean sessions: the shared core
 
-Shared rules for agent sessions in a Lean repo, loaded once through [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md).
+Shared rules for agent sessions in a Lean repo, loaded once through a lane sheet: [`LEAN-NEW-MATH.md`](LEAN-NEW-MATH.md) in our own repos, [`LEAN-UPSTREAM.md`](LEAN-UPSTREAM.md) in a project with its own contract.  Where a project's own `AGENTS.md` or `CONTRIBUTING` disagrees with this sheet, the project wins.
 
 ## 🧾 Lean is the record
 

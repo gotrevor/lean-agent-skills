@@ -2,7 +2,9 @@
 
 # Lane: new mathematics
 
-This is the default lane.  The goal is **new mathematics**.  Lean is the ledger it is written in, not the goal, so formalizing known theorems for their own sake is not where effort goes.
+**Repos we own only.**  If the repo has its own `AGENTS.md`, `CONTRIBUTING` or workflow doc, stop and read [`LEAN-UPSTREAM.md`](LEAN-UPSTREAM.md) instead: that project's contract governs, and nothing below applies there.
+
+This is the default lane for our own repos.  The goal is **new mathematics**.  Lean is the ledger it is written in, not the goal, so formalizing known theorems for their own sake is not where effort goes.
 
 **Cue to switch lanes:** when the user asks to formalize or publish a known result ("formalize X", "get this ready to publish", "no sorry"), read [`LEAN-FORMALIZE.md`](LEAN-FORMALIZE.md) before starting.  For that work, its finish line overrides the "encouraged" list below.
 

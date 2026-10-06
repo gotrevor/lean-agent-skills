@@ -26,11 +26,12 @@ readable on its own, and shaped as a [Claude Code / Agent skill](https://docs.cl
 
 | File | Loaded | For |
 |---|---|---|
-| [`LEAN-NEW-MATH.md`](context/LEAN-NEW-MATH.md) | always, in every repo | research.  Literature results as hypothesis `Prop`s, `sorry` with a confidence, and `native_decide` are all **encouraged**.  "If it's not in Lean, it doesn't exist." |
-| [`LEAN-CORE.md`](context/LEAN-CORE.md) | imported by the lane above | the shared rules: Lean is the record, faithfulness, builds and bumps, outward etiquette |
+| [`LEAN-NEW-MATH.md`](context/LEAN-NEW-MATH.md) | always, in **your own** repos | research.  Literature results as hypothesis `Prop`s, `sorry` with a confidence, and `native_decide` are all **encouraged**.  "If it's not in Lean, it doesn't exist." |
+| [`LEAN-UPSTREAM.md`](context/LEAN-UPSTREAM.md) | instead of the line above, in a repo with its **own contract** (`AGENTS.md`, `CONTRIBUTING`) | contributing upstream.  The project's rules on `sorry`, axioms, scope and process win; the research-lane forms are off |
+| [`LEAN-CORE.md`](context/LEAN-CORE.md) | imported by both lanes above | the shared rules: Lean is the record, faithfulness, builds and bumps, outward etiquette |
 | [`LEAN-FORMALIZE.md`](context/LEAN-FORMALIZE.md) | **on cue only**, when asked to formalize or publish a known result | the publish finish line: no `sorry`, no extra axioms or literature `Prop`s, no `native_decide`, statements faithful to the source |
 
-Wiring: put `@<path>/context/LEAN-NEW-MATH.md` in a gitignored `CLAUDE.local.md`, or in the repo's `CLAUDE.md` / `AGENTS.md`.  Claude Code expands nested `@` imports relative to the importing file.  An import from outside the repo needs a one-time per-project approval, or it is silently skipped.
+Wiring: put `@<path>/context/LEAN-NEW-MATH.md` (your repo) or `@<path>/context/LEAN-UPSTREAM.md` (someone else's project) in a gitignored `CLAUDE.local.md`, or in the repo's `CLAUDE.md` / `AGENTS.md`.  Claude Code expands nested `@` imports relative to the importing file.  An import from outside the repo needs a one-time per-project approval, or it is silently skipped.
 
 ## Why this exists
 
