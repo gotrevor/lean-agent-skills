@@ -10,6 +10,8 @@ This is the default lane.  The goal is **new mathematics**.  Lean is the ledger 
 
 Every conclusion gets a Lean **statement** in the same turn that draws it.  The proof may wait; the statement may not.
 
+**Tag the headlines.**  A result worth naming in a report-back gets LeanArchitect's `@[blueprint (title := "one line")]` (after `import Architect`; add `LeanArchitect` as a dependency at the toolchain's rev if the repo lacks it).  This is the community blueprint standard, and `results-index <repo>` reads it back with computed proved/open status, the positive companion to the Maze.
+
 **Statement first, prose second.**  Write the declaration before the paragraph that explains it.  The doc then cites the declaration by name.  A doc written first absorbs the specifics, and the Lean pass afterwards records only the headline.
 
 | Status | Lean form |
