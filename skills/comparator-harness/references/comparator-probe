@@ -37,6 +37,7 @@ REPO = pathlib.Path.cwd()
 # so they agree by construction, and printing them buries the signal.
 PROBE = r"""
 import {module}
+import Lean
 open Lean Meta
 
 namespace CmpProbe
